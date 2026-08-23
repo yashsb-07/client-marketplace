@@ -8,7 +8,8 @@
     "start": "node src/server.js",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
-    "seed:admin": "node src/config/seedAdmin.js"
+    "seed:admin": "node src/config/seedAdmin.js",
+    "seed:categories": "node src/config/seedCategories.js"
   },
   "keywords": [],
   "author": "",
