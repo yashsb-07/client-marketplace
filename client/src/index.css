@@ -524,6 +524,254 @@ img {
   animation: spin 0.8s linear infinite;
 }
 
+/* Authentication */
+
+.auth-page {
+  width: min(100% - 24px, 480px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 48px 0;
+  display: flex;
+  align-items: center;
+}
+
+.auth-card {
+  width: 100%;
+  padding: 32px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+}
+
+.auth-card__header {
+  margin-bottom: 28px;
+}
+
+.auth-card__eyebrow,
+.buyer-card__eyebrow {
+  margin: 0 0 8px;
+  color: #666;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auth-card__header h1 {
+  margin: 0 0 10px;
+  color: #171717;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.auth-card__header p:last-child {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.auth-form {
+  display: grid;
+  gap: 18px;
+}
+
+.auth-field {
+  display: grid;
+  gap: 7px;
+}
+
+.auth-field label {
+  color: #222;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.auth-field input {
+  width: 100%;
+  min-height: 46px;
+  box-sizing: border-box;
+  padding: 0 13px;
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+  background: #fff;
+  color: #171717;
+  font: inherit;
+  outline: none;
+}
+
+.auth-field input:focus {
+  border-color: #171717;
+}
+
+.auth-form__error {
+  margin: 0;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: #991b1b;
+  background: #fee2e2;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.auth-form__submit {
+  min-height: 46px;
+  border: 0;
+  border-radius: 8px;
+  background: #171717;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-form__submit:hover {
+  background: #303030;
+}
+
+.auth-form__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.auth-card__footer {
+  margin: 24px 0 0;
+  color: #666;
+  font-size: 14px;
+  text-align: center;
+}
+
+.auth-card__footer a {
+  color: #171717;
+  font-weight: 700;
+}
+
+/* Authentication loading */
+
+.auth-state {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: #666;
+}
+
+/* Buyer foundation */
+
+.buyer-page {
+  width: min(100% - 48px, 1000px);
+  margin: 0 auto;
+  padding: 48px 0 64px;
+}
+
+.buyer-card {
+  display: grid;
+  gap: 28px;
+  padding: 32px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.buyer-card h1 {
+  margin: 0 0 8px;
+  color: #171717;
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.1;
+}
+
+.buyer-card > div:first-child p:last-child {
+  margin: 0;
+  color: #666;
+}
+
+.buyer-card__details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.buyer-card__details > div {
+  display: grid;
+  gap: 5px;
+  padding: 18px;
+  border-right: 1px solid #e5e5e5;
+}
+
+.buyer-card__details > div:last-child {
+  border-right: 0;
+}
+
+.buyer-card__details span {
+  color: #777;
+  font-size: 13px;
+}
+
+.buyer-card__details strong {
+  color: #222;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.buyer-card__logout {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #171717;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .auth-page {
+    padding: 24px 0;
+  }
+
+  .auth-card {
+    padding: 24px;
+  }
+
+  .buyer-page {
+    width: calc(100% - 24px);
+    padding: 28px 0 48px;
+  }
+
+  .buyer-card {
+    padding: 24px;
+  }
+
+  .buyer-card__details {
+    grid-template-columns: 1fr;
+  }
+
+  .buyer-card__details > div {
+    border-right: 0;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .buyer-card__details > div:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .auth-card {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .auth-card__header h1 {
+    font-size: 28px;
+  }
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
