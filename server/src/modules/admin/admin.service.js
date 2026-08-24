@@ -4,12 +4,23 @@ const getDashboard = async () => {
   const [
     sellers,
     buyers,
+
     products,
+    activeProducts,
+    inactiveProducts,
+    visibleProducts,
+    hiddenProducts,
+
     orders,
+
     successfulPayments,
     pendingPayments,
+    failedPayments,
+    cancelledPayments,
+
     revenue,
   ] = await Promise.all([
+    /* Users */
     prisma.user.count({
       where: {
         role: "SELLER",
@@ -22,10 +33,37 @@ const getDashboard = async () => {
       },
     }),
 
+    /* Products */
     prisma.product.count(),
 
+    prisma.product.count({
+      where: {
+        status: "ACTIVE",
+      },
+    }),
+
+    prisma.product.count({
+      where: {
+        status: "INACTIVE",
+      },
+    }),
+
+    prisma.product.count({
+      where: {
+        isVisible: true,
+      },
+    }),
+
+    prisma.product.count({
+      where: {
+        isVisible: false,
+      },
+    }),
+
+    /* Orders */
     prisma.order.count(),
 
+    /* Payments */
     prisma.payment.count({
       where: {
         status: "SUCCESS",
@@ -38,6 +76,19 @@ const getDashboard = async () => {
       },
     }),
 
+    prisma.payment.count({
+      where: {
+        status: "FAILED",
+      },
+    }),
+
+    prisma.payment.count({
+      where: {
+        status: "CANCELLED",
+      },
+    }),
+
+    /* Revenue */
     prisma.payment.aggregate({
       where: {
         status: "SUCCESS",
@@ -51,11 +102,23 @@ const getDashboard = async () => {
   return {
     sellers,
     buyers,
+
     products,
+    activeProducts,
+    inactiveProducts,
+    visibleProducts,
+    hiddenProducts,
+
     orders,
+
     successfulPayments,
     pendingPayments,
-    revenue: revenue._sum.amount || 0,
+    failedPayments,
+    cancelledPayments,
+
+    revenue: revenue._sum.amount
+      ? revenue._sum.amount.toString()
+      : "0.00",
   };
 };
 
