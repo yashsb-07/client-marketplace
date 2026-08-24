@@ -50,3 +50,11 @@ export const getMarketplaceProducts = async ({
 
   return response.data.data;
 };
+
+export const getMarketplaceProductById = async (productId) => {
+  const response = await axios.get(
+    `${API_BASE_URL}/marketplace/products/${productId}`
+  );
+
+  return response.data.data;
+};

@@ -5,6 +5,7 @@ import {
   Routes,
 } from "react-router-dom";
 import MarketplacePage from "./pages/MarketplacePage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 
 function App() {
   return (
@@ -13,6 +14,11 @@ function App() {
         <Route
           path="/marketplace"
           element={<MarketplacePage />}
+        />
+
+        <Route
+          path="/marketplace/products/:id"
+          element={<ProductDetailsPage />}
         />
 
         <Route
