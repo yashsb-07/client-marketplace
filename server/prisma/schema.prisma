@@ -25,6 +25,7 @@ model User {
   role         UserRole      @default(BUYER)
   isBlocked    Boolean       @default(false)
   products     Product[]
+  cart         Cart?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -55,8 +56,36 @@ model Product {
   seller      User          @relation(fields: [sellerId], references: [id], onDelete: Restrict)
   category    Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 
+  cartItems   CartItem[]
+
   @@index([sellerId])
   @@index([categoryId])
   @@index([isVisible])
   @@index([status])
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  buyerId   Int        @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  buyer     User       @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId    Int
+  productId Int
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@unique([cartId, productId])
+  @@index([cartId])
+  @@index([productId])
 }
