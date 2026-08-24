@@ -99,6 +99,88 @@ img {
   white-space: nowrap;
 }
 
+/* Marketplace filters */
+
+.marketplace-filters {
+  margin-bottom: 32px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.filter-form {
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 2fr)
+    repeat(5, minmax(130px, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+
+.filter-field {
+  min-width: 0;
+}
+
+.filter-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: #444;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+  outline: none;
+  color: #171717;
+  background: #fff;
+}
+
+.filter-field input:focus,
+.filter-field select:focus {
+  border-color: #171717;
+  box-shadow: 0 0 0 2px rgba(23, 23, 23, 0.08);
+}
+
+.filter-field--search {
+  min-width: 0;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  grid-column: 1 / -1;
+}
+
+.filter-button {
+  min-height: 42px;
+  padding: 9px 16px;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+  color: #171717;
+  background: #fff;
+}
+
+.filter-button:hover {
+  background: #f3f3f3;
+}
+
+.filter-button--primary {
+  border-color: #171717;
+  color: #fff;
+  background: #171717;
+}
+
+.filter-button--primary:hover {
+  background: #333;
+}
+
 /* Product grid */
 
 .product-grid {
@@ -293,6 +375,10 @@ img {
   .product-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .filter-form {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* Small tablet */
@@ -313,6 +399,18 @@ img {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
   }
+
+  .marketplace-filters {
+    padding: 16px;
+  }
+
+  .filter-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filter-field--search {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Mobile */
@@ -330,6 +428,26 @@ img {
 
   .marketplace-description {
     font-size: 15px;
+  }
+
+  .marketplace-filters {
+    padding: 14px;
+  }
+
+  .filter-form {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-field--search {
+    grid-column: auto;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+  }
+
+  .filter-button {
+    width: 100%;
   }
 
   .product-grid {
@@ -353,6 +471,8 @@ img {
   .pagination button {
     min-width: 88px;
   }
+
+
 }
 
 /* Very small mobile */
