@@ -5,6 +5,7 @@ const {
   updateProduct,
   updateProductVisibility,
   deactivateProduct,
+  activateProduct,
 } = require("./product.service");
 
 const create = async (req, res, next) => {
@@ -119,6 +120,23 @@ const deactivate = async (req, res, next) => {
   }
 };
 
+const activate = async (req, res, next) => {
+  try {
+    const product = await activateProduct(
+      req.user.userId,
+      Number(req.params.id)
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Product activated successfully",
+      data: product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   getMine,
@@ -126,4 +144,5 @@ module.exports = {
   update,
   updateVisibility,
   deactivate,
+  activate,
 };

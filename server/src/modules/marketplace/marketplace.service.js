@@ -14,7 +14,6 @@ const getPublicProducts = async ({
 
   const where = {
     isVisible: true,
-    status: "ACTIVE",
   };
 
   const [products, total] = await Promise.all([
@@ -57,7 +56,6 @@ const getPublicProductById = async (productId) => {
     where: {
       id: productId,
       isVisible: true,
-      status: "ACTIVE",
     },
     include: {
       category: true,

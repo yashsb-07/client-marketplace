@@ -207,6 +207,37 @@ const deactivateProduct = async (
   });
 };
 
+const activateProduct = async (
+  sellerId,
+  productId
+) => {
+  const existingProduct = await prisma.product.findFirst({
+    where: {
+      id: productId,
+      sellerId,
+    },
+  });
+
+  if (!existingProduct) {
+    const error = new Error("Product not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return prisma.product.update({
+    where: {
+      id: productId,
+    },
+    data: {
+      status: "ACTIVE",
+      isVisible: true,
+    },
+    include: {
+      category: true,
+    },
+  });
+};
+
 module.exports = {
   createProduct,
   getSellerProducts,
@@ -214,4 +245,5 @@ module.exports = {
   updateProduct,
   updateProductVisibility,
   deactivateProduct,
+  activateProduct,
 };

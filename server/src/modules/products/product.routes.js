@@ -7,6 +7,7 @@ const {
   update,
   updateVisibility,
   deactivate,
+  activate,
 } = require("./product.controller");
 
 const {
@@ -61,6 +62,13 @@ router.patch(
   productIdValidation,
   validateRequest,
   deactivate
+);
+
+router.patch(
+  "/:id/activate",
+  productIdValidation,
+  validateRequest,
+  activate
 );
 
 module.exports = router;
