@@ -3,8 +3,15 @@ const prisma = require("../../config/prisma");
 const getPublicProducts = async ({
   page = 1,
   limit = 12,
+  search,
+  categoryId,
+  minPrice,
+  maxPrice,
+  available,
+  sort,
 }) => {
   const pageNumber = Math.max(Number(page) || 1, 1);
+
   const limitNumber = Math.min(
     Math.max(Number(limit) || 12, 1),
     50
@@ -15,6 +22,103 @@ const getPublicProducts = async ({
   const where = {
     isVisible: true,
   };
+
+  // Search
+  if (search && search.trim()) {
+    const searchTerm = search.trim();
+
+    where.OR = [
+      {
+        name: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      },
+      {
+        description: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      },
+      {
+        category: {
+          name: {
+            contains: searchTerm,
+            mode: "insensitive",
+          },
+        },
+      },
+    ];
+  }
+
+  // Category filter
+  if (categoryId !== undefined) {
+    const parsedCategoryId = Number(categoryId);
+
+    if (!Number.isNaN(parsedCategoryId)) {
+      where.categoryId = parsedCategoryId;
+    }
+  }
+
+  // Minimum price
+  if (minPrice !== undefined) {
+    const parsedMinPrice = Number(minPrice);
+
+    if (!Number.isNaN(parsedMinPrice)) {
+      where.price = {
+        ...(where.price || {}),
+        gte: parsedMinPrice,
+      };
+    }
+  }
+
+  // Maximum price
+  if (maxPrice !== undefined) {
+    const parsedMaxPrice = Number(maxPrice);
+
+    if (!Number.isNaN(parsedMaxPrice)) {
+      where.price = {
+        ...(where.price || {}),
+        lte: parsedMaxPrice,
+      };
+    }
+  }
+
+  // Availability filter
+  if (available === "true") {
+    where.quantity = {
+      gt: 0,
+    };
+  }
+
+  if (available === "false") {
+    where.quantity = {
+      equals: 0,
+    };
+  }
+
+  // Sorting
+  let orderBy = {
+    createdAt: "desc",
+  };
+
+  if (sort === "oldest") {
+    orderBy = {
+      createdAt: "asc",
+    };
+  }
+
+  if (sort === "price_asc") {
+    orderBy = {
+      price: "asc",
+    };
+  }
+
+  if (sort === "price_desc") {
+    orderBy = {
+      price: "desc",
+    };
+  }
 
   const [products, total] = await Promise.all([
     prisma.product.findMany({
@@ -30,9 +134,7 @@ const getPublicProducts = async ({
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy,
     }),
 
     prisma.product.count({
