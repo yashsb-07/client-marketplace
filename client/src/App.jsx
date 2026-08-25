@@ -9,6 +9,7 @@ import RegisterPage from "./pages/RegisterPage";
 import { CartProvider } from "./context/CartContext";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path="/buyer" element={<BuyerDashboardPage />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/payment" element={<PaymentPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/marketplace" replace />} />
