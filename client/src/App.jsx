@@ -10,6 +10,8 @@ import { CartProvider } from "./context/CartContext";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import PaymentPage from "./pages/PaymentPage";
+import SellerDashboardPage from "./pages/SellerDashboardPage";
+import RoleProtectedRoute from "./routes/RoleProtectedRoute";
 
 function App() {
   return (
@@ -33,6 +35,10 @@ function App() {
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/payment" element={<PaymentPage />} />
+            </Route>
+
+            <Route element={<RoleProtectedRoute allowedRole="SELLER" />}>
+              <Route path="/seller" element={<SellerDashboardPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/marketplace" replace />} />
