@@ -8,6 +8,7 @@ import ProductDetailsPage from "./pages/ProductDetailsPage";
 import RegisterPage from "./pages/RegisterPage";
 import { CartProvider } from "./context/CartContext";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/buyer" element={<BuyerDashboardPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/marketplace" replace />} />

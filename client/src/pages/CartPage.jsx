@@ -4,14 +4,7 @@ import { useCart } from "../context/useCart";
 import "./CartPage.css";
 
 function CartPage() {
-  const {
-    cart,
-    loading,
-    error,
-    updateItem,
-    removeItem,
-    clear,
-  } = useCart();
+  const { cart, loading, error, updateItem, removeItem, clear } = useCart();
 
   if (loading && !cart) {
     return (
@@ -31,9 +24,7 @@ function CartPage() {
 
           <p>{error}</p>
 
-          <Link to="/marketplace">
-            Back to Marketplace
-          </Link>
+          <Link to="/marketplace">Back to Marketplace</Link>
         </section>
       </main>
     );
@@ -47,15 +38,9 @@ function CartPage() {
         <section className="cart-state">
           <h1>Your cart is empty</h1>
 
-          <p>
-            Add products from the marketplace
-            to see them here.
-          </p>
+          <p>Add products from the marketplace to see them here.</p>
 
-          <Link
-            to="/marketplace"
-            className="cart-primary-button"
-          >
+          <Link to="/marketplace" className="cart-primary-button">
             Continue Shopping
           </Link>
         </section>
@@ -64,26 +49,17 @@ function CartPage() {
   }
 
   const subtotal = items.reduce(
-    (total, item) =>
-      total +
-      Number(item.product.price) *
-        item.quantity,
-    0
+    (total, item) => total + Number(item.product.price) * item.quantity,
+    0,
   );
 
-  const handleQuantityChange = async (
-    productId,
-    quantity
-  ) => {
+  const handleQuantityChange = async (productId, quantity) => {
     if (quantity < 1) {
       return;
     }
 
     try {
-      await updateItem(
-        productId,
-        quantity
-      );
+      await updateItem(productId, quantity);
     } catch {
       // Error is already stored by CartContext.
     }
@@ -109,41 +85,27 @@ function CartPage() {
     <main className="cart-page">
       <header className="cart-page__header">
         <div>
-          <p className="cart-page__eyebrow">
-            Buyer Cart
-          </p>
+          <p className="cart-page__eyebrow">Buyer Cart</p>
 
           <h1>Your Cart</h1>
         </div>
 
-        <Link
-          to="/marketplace"
-          className="cart-secondary-button"
-        >
+        <Link to="/marketplace" className="cart-secondary-button">
           Continue Shopping
         </Link>
       </header>
 
-      {error && (
-        <div className="cart-alert">
-          {error}
-        </div>
-      )}
+      {error && <div className="cart-alert">{error}</div>}
 
       <section className="cart-layout">
         <div className="cart-items">
           {items.map((item) => {
             const product = item.product;
 
-            const itemTotal =
-              Number(product.price) *
-              item.quantity;
+            const itemTotal = Number(product.price) * item.quantity;
 
             return (
-              <article
-                key={item.id}
-                className="cart-item"
-              >
+              <article key={item.id} className="cart-item">
                 <div className="cart-item__image-wrapper">
                   {product.imageUrl ? (
                     <img
@@ -152,31 +114,23 @@ function CartPage() {
                       className="cart-item__image"
                     />
                   ) : (
-                    <div className="cart-item__image-placeholder">
-                      No image
-                    </div>
+                    <div className="cart-item__image-placeholder">No image</div>
                   )}
                 </div>
 
                 <div className="cart-item__content">
                   <p className="cart-item__category">
-                    {product.category?.name ||
-                      "Uncategorized"}
+                    {product.category?.name || "Uncategorized"}
                   </p>
 
                   <h2>{product.name}</h2>
 
                   <p className="cart-item__seller">
-                    Sold by{" "}
-                    {product.seller?.name ||
-                      "Unknown seller"}
+                    Sold by {product.seller?.name || "Unknown seller"}
                   </p>
 
                   <p className="cart-item__price">
-                    ₹
-                    {Number(
-                      product.price
-                    ).toFixed(2)}
+                    ₹{Number(product.price).toFixed(2)}
                   </p>
                 </div>
 
@@ -185,51 +139,32 @@ function CartPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        handleQuantityChange(
-                          product.id,
-                          item.quantity - 1
-                        )
+                        handleQuantityChange(product.id, item.quantity - 1)
                       }
-                      disabled={
-                        item.quantity <= 1
-                      }
+                      disabled={item.quantity <= 1}
                     >
                       −
                     </button>
 
-                    <span>
-                      {item.quantity}
-                    </span>
+                    <span>{item.quantity}</span>
 
                     <button
                       type="button"
                       onClick={() =>
-                        handleQuantityChange(
-                          product.id,
-                          item.quantity + 1
-                        )
+                        handleQuantityChange(product.id, item.quantity + 1)
                       }
-                      disabled={
-                        item.quantity >=
-                        product.quantity
-                      }
+                      disabled={item.quantity >= product.quantity}
                     >
                       +
                     </button>
                   </div>
 
-                  <strong>
-                    ₹{itemTotal.toFixed(2)}
-                  </strong>
+                  <strong>₹{itemTotal.toFixed(2)}</strong>
 
                   <button
                     type="button"
                     className="cart-remove-button"
-                    onClick={() =>
-                      handleRemove(
-                        product.id
-                      )
-                    }
+                    onClick={() => handleRemove(product.id)}
                   >
                     Remove
                   </button>
@@ -251,9 +186,7 @@ function CartPage() {
           <div className="cart-summary__row cart-summary__row--total">
             <span>Subtotal</span>
 
-            <strong>
-              ₹{subtotal.toFixed(2)}
-            </strong>
+            <strong>₹{subtotal.toFixed(2)}</strong>
           </div>
 
           <button
@@ -264,9 +197,12 @@ function CartPage() {
             Clear Cart
           </button>
 
+          <Link to="/checkout" className="cart-primary-button">
+            Proceed to Checkout
+          </Link>
+
           <p className="cart-summary__note">
-            Checkout will be available in the
-            next step.
+            Review your order before placing it.
           </p>
         </aside>
       </section>
