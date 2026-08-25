@@ -1,13 +1,25 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
 import { getMarketplaceProductById } from "../services/marketplaceService";
+import { useCart } from "../context/useCart";
+import { useAuth } from "../context/useAuth";
 
 function ProductDetailsPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [cartQuantity, setCartQuantity] = useState(1);
+  const [cartMessage, setCartMessage] = useState("");
+  const [addingToCart, setAddingToCart] = useState(false);
+
+  const { addItem, error: cartError } = useCart();
+
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     let cancelled = false;
@@ -55,6 +67,42 @@ function ProductDetailsPage() {
     };
   }, [id]);
 
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    if (!product || product.quantity <= 0) {
+      return;
+    }
+
+    try {
+      setAddingToCart(true);
+      setCartMessage("");
+
+      await addItem(product.id, cartQuantity);
+
+      setCartMessage("Product added to your cart.");
+    } catch {
+      // CartContext stores the backend error.
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  const handleQuantityChange = (event) => {
+    const value = Number(event.target.value);
+
+    if (
+      Number.isInteger(value) &&
+      value >= 1 &&
+      value <= product.quantity
+    ) {
+      setCartQuantity(value);
+    }
+  };
+
   if (loading) {
     return (
       <main className="product-details-page">
@@ -71,9 +119,7 @@ function ProductDetailsPage() {
     return (
       <main className="product-details-page">
         <section className="product-details-state product-details-state--error">
-          <h1>
-            {error || "Product not found."}
-          </h1>
+          <h1>{error || "Product not found."}</h1>
 
           <p>
             The product may no longer be available.
@@ -144,9 +190,7 @@ function ProductDetailsPage() {
                   : "product-details__badge product-details__badge--out"
               }
             >
-              {isAvailable
-                ? "In Stock"
-                : "Out of Stock"}
+              {isAvailable ? "In Stock" : "Out of Stock"}
             </span>
 
             {isAvailable && (
@@ -155,6 +199,48 @@ function ProductDetailsPage() {
               </span>
             )}
           </div>
+
+          {isAvailable && (
+            <div className="product-details__cart">
+              <div className="product-details__quantity">
+                <label htmlFor="cart-quantity">
+                  Quantity
+                </label>
+
+                <input
+                  id="cart-quantity"
+                  type="number"
+                  min="1"
+                  max={product.quantity}
+                  value={cartQuantity}
+                  onChange={handleQuantityChange}
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={addingToCart}
+                className="product-details__add-cart"
+              >
+                {addingToCart
+                  ? "Adding..."
+                  : "Add to Cart"}
+              </button>
+
+              {cartMessage && (
+                <p className="product-details__cart-success">
+                  {cartMessage}
+                </p>
+              )}
+
+              {cartError && (
+                <p className="product-details__cart-error">
+                  {cartError}
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="product-details__section">
             <h2>Description</h2>
