@@ -41,53 +41,83 @@ function PaymentPage() {
   };
 
   if (payment) {
+    const isSuccess = payment.status === "SUCCESS";
+    const isFailed = payment.status === "FAILED";
+    const isCancelled = payment.status === "CANCELLED";
+
     return (
-      <main className="payment-page">
-        <section className="payment-result">
-          <p className="payment-page__eyebrow">
+        <main className="payment-page">
+        <section
+            className={`payment-result ${
+            isSuccess
+                ? "payment-result--success"
+                : "payment-result--failure"
+            }`}
+        >
+            <p className="payment-page__eyebrow">
             Demo Payment
-          </p>
+            </p>
 
-          <h1>Payment Processed</h1>
+            <h1>
+            {isSuccess
+                ? "Payment Successful"
+                : isFailed
+                ? "Payment Failed"
+                : isCancelled
+                    ? "Payment Cancelled"
+                    : "Payment Processed"}
+            </h1>
 
-          <p>
-            Your demo payment has been processed.
-          </p>
+            <p>
+            {isSuccess
+                ? "Your payment was successful and your order has been confirmed."
+                : isFailed
+                ? "Your payment failed. Your order was not confirmed and inventory was not reduced."
+                : isCancelled
+                    ? "Your payment was cancelled. Your order was not confirmed and inventory was not reduced."
+                    : "Your demo payment has been processed."}
+            </p>
 
-          <div className="payment-result__details">
+            <div className="payment-result__status">
+            {isSuccess
+                ? "✓ Order Confirmed"
+                : "Inventory Unchanged"}
+            </div>
+
+            <div className="payment-result__details">
             <div>
-              <span>Order ID</span>
-              <strong>#{order.id}</strong>
+                <span>Order ID</span>
+                <strong>#{order.id}</strong>
             </div>
 
             <div>
-              <span>Payment Status</span>
-              <strong>{payment.status}</strong>
+                <span>Payment Status</span>
+                <strong>{payment.status}</strong>
             </div>
 
             <div>
-              <span>Amount</span>
-              <strong>
+                <span>Amount</span>
+                <strong>
                 ₹{Number(payment.amount).toFixed(2)}
-              </strong>
+                </strong>
             </div>
 
             <div>
-              <span>Transaction ID</span>
-              <strong>{payment.transactionId}</strong>
+                <span>Transaction ID</span>
+                <strong>{payment.transactionId}</strong>
             </div>
-          </div>
+            </div>
 
-          <Link
+            <Link
             to="/marketplace"
             className="payment-primary-button"
-          >
+            >
             Back to Marketplace
-          </Link>
+            </Link>
         </section>
-      </main>
+        </main>
     );
-  }
+    }
 
   return (
     <main className="payment-page">
