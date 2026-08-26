@@ -68,3 +68,14 @@ export const unblockAdminUser = async (userId) => {
 
   return response.data;
 };
+
+export const getAdminProducts = async () => {
+  const response = await axios.get(
+    `${API_BASE_URL}/admin/products`,
+    {
+      headers: getAuthHeaders(),
+    },
+  );
+
+  return response.data.data;
+};

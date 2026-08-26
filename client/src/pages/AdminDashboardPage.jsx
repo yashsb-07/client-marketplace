@@ -4,6 +4,7 @@ import {
   blockAdminUser,
   getAdminBuyers,
   getAdminDashboard,
+  getAdminProducts,
   getAdminSellers,
   unblockAdminUser,
 } from "../services/adminService";
@@ -14,6 +15,10 @@ export default function AdminDashboardPage() {
   const [dashboard, setDashboard] = useState(null);
   const [sellers, setSellers] = useState([]);
   const [buyers, setBuyers] = useState([]);
+
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productError, setProductError] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [usersLoading, setUsersLoading] = useState(true);
@@ -81,8 +86,7 @@ export default function AdminDashboardPage() {
 
         if (!cancelled) {
           setUserError(
-            err.response?.data?.message ||
-              "Unable to load admin users.",
+            err.response?.data?.message || "Unable to load admin users.",
           );
         }
       } finally {
@@ -93,6 +97,41 @@ export default function AdminDashboardPage() {
     };
 
     fetchUsers();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchProducts = async () => {
+      try {
+        setProductsLoading(true);
+        setProductError("");
+
+        const data = await getAdminProducts();
+
+        if (!cancelled) {
+          setProducts(data);
+        }
+      } catch (err) {
+        console.error("Admin products request failed:", err);
+
+        if (!cancelled) {
+          setProductError(
+            err.response?.data?.message || "Unable to load admin products.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setProductsLoading(false);
+        }
+      }
+    };
+
+    fetchProducts();
 
     return () => {
       cancelled = true;
@@ -112,9 +151,7 @@ export default function AdminDashboardPage() {
       const updatedUser = response.data;
 
       const updateUsers = (users) =>
-        users.map((user) =>
-          user.id === updatedUser.id ? updatedUser : user,
-        );
+        users.map((user) => (user.id === updatedUser.id ? updatedUser : user));
 
       setSellers((current) => updateUsers(current));
       setBuyers((current) => updateUsers(current));
@@ -124,8 +161,7 @@ export default function AdminDashboardPage() {
       console.error("Admin user status update failed:", err);
 
       setUserError(
-        err.response?.data?.message ||
-          "Unable to update the user status.",
+        err.response?.data?.message || "Unable to update the user status.",
       );
     } finally {
       setActionUserId(null);
@@ -156,9 +192,7 @@ export default function AdminDashboardPage() {
         <button
           type="button"
           className="admin-user-action-button"
-          onClick={() =>
-            handleUserStatusChange(user.id, !isBlocked)
-          }
+          onClick={() => handleUserStatusChange(user.id, !isBlocked)}
           disabled={actionUserId === user.id}
         >
           {actionUserId === user.id
@@ -167,6 +201,66 @@ export default function AdminDashboardPage() {
               ? "Unblock User"
               : "Block User"}
         </button>
+      </article>
+    );
+  };
+
+  const renderProduct = (product) => {
+    const isVisible = product.isVisible === true;
+    const isActive = product.status === "ACTIVE";
+
+    return (
+      <article className="admin-product-card" key={product.id}>
+        {product.imageUrl && (
+          <img
+            className="admin-product-image"
+            src={product.imageUrl}
+            alt={product.name}
+          />
+        )}
+
+        <div className="admin-product-card-content">
+          <h3>{product.name}</h3>
+
+          <p>{product.description}</p>
+
+          <div className="admin-product-meta">
+            <span>Price: ₹{product.price}</span>
+            <span>Quantity: {product.quantity}</span>
+          </div>
+
+          {product.category && <span>Category: {product.category.name}</span>}
+
+          {product.seller && (
+            <div className="admin-product-seller">
+              <strong>Seller</strong>
+              <span>{product.seller.name}</span>
+              <span>{product.seller.email}</span>
+            </div>
+          )}
+
+          <div className="admin-product-statuses">
+            <span
+              className={
+                isVisible
+                  ? "admin-product-status visible"
+                  : "admin-product-status hidden"
+              }
+            >
+              {isVisible ? "Visible" : "Hidden"}
+            </span>
+
+            <span
+              className={
+                isActive
+                  ? "admin-product-status active"
+                  : "admin-product-status inactive"
+              }
+            >
+              {isActive ? "ACTIVE" : "INACTIVE"}
+            </span>
+          </div>
+        </div>
       </article>
     );
   };
@@ -199,9 +293,7 @@ export default function AdminDashboardPage() {
         <div>
           <h1>Admin Dashboard</h1>
 
-          <p>
-            Monitor the marketplace platform from one place.
-          </p>
+          <p>Monitor the marketplace platform from one place.</p>
         </div>
       </section>
 
@@ -250,6 +342,26 @@ export default function AdminDashboardPage() {
             <strong>{dashboard.hiddenProducts}</strong>
           </article>
         </div>
+      </section>
+
+      <section className="admin-dashboard-section">
+        <h2>Product Management</h2>
+
+        {productError && (
+          <div className="admin-user-message error">{productError}</div>
+        )}
+
+        {productsLoading ? (
+          <p>Loading products...</p>
+        ) : products.length === 0 ? (
+          <div className="admin-user-empty">
+            <p>No products found.</p>
+          </div>
+        ) : (
+          <div className="admin-products-list">
+            {products.map(renderProduct)}
+          </div>
+        )}
       </section>
 
       <section className="admin-dashboard-section">
@@ -302,15 +414,11 @@ export default function AdminDashboardPage() {
         <h2>Seller Management</h2>
 
         {userError && (
-          <div className="admin-user-message error">
-            {userError}
-          </div>
+          <div className="admin-user-message error">{userError}</div>
         )}
 
         {userSuccess && (
-          <div className="admin-user-message success">
-            {userSuccess}
-          </div>
+          <div className="admin-user-message success">{userSuccess}</div>
         )}
 
         {usersLoading ? (
@@ -320,9 +428,7 @@ export default function AdminDashboardPage() {
             <p>No sellers found.</p>
           </div>
         ) : (
-          <div className="admin-users-list">
-            {sellers.map(renderUser)}
-          </div>
+          <div className="admin-users-list">{sellers.map(renderUser)}</div>
         )}
       </section>
 
@@ -336,9 +442,7 @@ export default function AdminDashboardPage() {
             <p>No buyers found.</p>
           </div>
         ) : (
-          <div className="admin-users-list">
-            {buyers.map(renderUser)}
-          </div>
+          <div className="admin-users-list">{buyers.map(renderUser)}</div>
         )}
       </section>
     </main>
