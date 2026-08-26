@@ -14,11 +14,13 @@ import SellerDashboardPage from "./pages/SellerDashboardPage";
 import RoleProtectedRoute from "./routes/RoleProtectedRoute";
 import SellerProductsPage from "./pages/SellerProductsPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AppHeader from "./components/AppHeader";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <AppHeader />
         <CartProvider>
           <Routes>
             <Route path="/marketplace" element={<MarketplacePage />} />

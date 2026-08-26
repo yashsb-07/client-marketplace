@@ -1,0 +1,141 @@
+.app-header {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+  background: #ffffff;
+}
+
+.app-header__inner {
+  width: min(1400px, calc(100% - 40px));
+  min-height: 72px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.app-header__brand {
+  flex-shrink: 0;
+  color: #171717;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.app-header__brand:hover {
+  text-decoration: underline;
+}
+
+.app-header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.app-header__link,
+.app-header__logout {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #444;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.app-header__link:hover {
+  color: #171717;
+  background: #f3f3f3;
+}
+
+.app-header__link--active {
+  color: #171717;
+  background: #f3f3f3;
+}
+
+.app-header__logout {
+  border-color: #d8d8d8;
+  cursor: pointer;
+}
+
+.app-header__logout:hover {
+  color: #ffffff;
+  border-color: #171717;
+  background: #171717;
+}
+
+.app-header__menu-button {
+  display: none;
+  width: 42px;
+  height: 42px;
+  padding: 8px;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.app-header__menu-button:hover {
+  background: #f3f3f3;
+}
+
+.app-header__menu-button span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin: 4px auto;
+  background: #171717;
+}
+
+@media (max-width: 768px) {
+  .app-header__inner {
+    min-height: 64px;
+    width: min(100% - 24px, 1400px);
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .app-header__menu-button {
+    display: block;
+  }
+
+  .app-header__nav {
+    display: none;
+    width: 100%;
+    padding: 12px 0 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .app-header__nav--open {
+    display: flex;
+  }
+
+  .app-header__link,
+  .app-header__logout {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 375px) {
+  .app-header__inner {
+    width: calc(100% - 20px);
+  }
+
+  .app-header__brand {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+}
