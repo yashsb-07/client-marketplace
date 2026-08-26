@@ -79,3 +79,14 @@ export const getAdminProducts = async () => {
 
   return response.data.data;
 };
+
+export const getAdminOrders = async () => {
+  const response = await axios.get(
+    `${API_BASE_URL}/admin/orders`,
+    {
+      headers: getAuthHeaders(),
+    },
+  );
+
+  return response.data.data;
+};

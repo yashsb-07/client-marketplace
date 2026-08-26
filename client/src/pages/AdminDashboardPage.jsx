@@ -4,6 +4,7 @@ import {
   blockAdminUser,
   getAdminBuyers,
   getAdminDashboard,
+  getAdminOrders,
   getAdminProducts,
   getAdminSellers,
   unblockAdminUser,
@@ -19,6 +20,10 @@ export default function AdminDashboardPage() {
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [productError, setProductError] = useState("");
+
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [orderError, setOrderError] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [usersLoading, setUsersLoading] = useState(true);
@@ -132,6 +137,41 @@ export default function AdminDashboardPage() {
     };
 
     fetchProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchOrders = async () => {
+      try {
+        setOrdersLoading(true);
+        setOrderError("");
+
+        const data = await getAdminOrders();
+
+        if (!cancelled) {
+          setOrders(data);
+        }
+      } catch (err) {
+        console.error("Admin orders request failed:", err);
+
+        if (!cancelled) {
+          setOrderError(
+            err.response?.data?.message || "Unable to load admin orders.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setOrdersLoading(false);
+        }
+      }
+    };
+
+    fetchOrders();
 
     return () => {
       cancelled = true;
@@ -265,6 +305,75 @@ export default function AdminDashboardPage() {
     );
   };
 
+  const renderOrder = (order) => {
+    return (
+      <article className="admin-order-card" key={order.id}>
+        <div className="admin-order-header">
+          <div>
+            <h3>Order #{order.id}</h3>
+
+            {order.buyer && (
+              <div className="admin-order-buyer">
+                <strong>{order.buyer.name}</strong>
+                <span>{order.buyer.email}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="admin-order-statuses">
+            <span className="admin-order-status">{order.status}</span>
+
+            <span className="admin-order-payment-status">
+              Payment: {order.paymentStatus}
+            </span>
+          </div>
+        </div>
+
+        <div className="admin-order-summary">
+          <span>Total: ₹{order.total}</span>
+
+          <span>Date: {new Date(order.createdAt).toLocaleString()}</span>
+        </div>
+
+        <div className="admin-order-items">
+          <h4>Items</h4>
+
+          {order.items?.map((item) => (
+            <div className="admin-order-item" key={item.id}>
+              <div>
+                <strong>{item.productName}</strong>
+
+                <span>Quantity: {item.quantity}</span>
+              </div>
+
+              <div className="admin-order-item-prices">
+                <span>Unit: ₹{item.unitPrice}</span>
+
+                <span>Total: ₹{item.totalPrice}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="admin-order-payment">
+          <h4>Payment</h4>
+
+          {order.payment ? (
+            <>
+              <span>Status: {order.payment.status}</span>
+
+              <span>Transaction: {order.payment.transactionId}</span>
+
+              <span>Amount: ₹{order.payment.amount}</span>
+            </>
+          ) : (
+            <span>No payment record yet.</span>
+          )}
+        </div>
+      </article>
+    );
+  };
+
   if (loading) {
     return (
       <main className="admin-dashboard-page">
@@ -373,6 +482,20 @@ export default function AdminDashboardPage() {
             <strong>{dashboard.orders}</strong>
           </article>
         </div>
+
+        {orderError && (
+          <div className="admin-user-message error">{orderError}</div>
+        )}
+
+        {ordersLoading ? (
+          <p>Loading orders...</p>
+        ) : orders.length === 0 ? (
+          <div className="admin-user-empty">
+            <p>No orders found.</p>
+          </div>
+        ) : (
+          <div className="admin-orders-list">{orders.map(renderOrder)}</div>
+        )}
       </section>
 
       <section className="admin-dashboard-section">

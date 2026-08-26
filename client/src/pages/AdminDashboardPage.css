@@ -305,3 +305,133 @@
     gap: 0.35rem;
   }
 }
+
+.admin-orders-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.admin-order-card {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-order-header h3 {
+  margin: 0 0 0.5rem;
+}
+
+.admin-order-buyer {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.admin-order-buyer span {
+  overflow-wrap: anywhere;
+}
+
+.admin-order-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.admin-order-status,
+.admin-order-payment-status {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #f1f1f1;
+}
+
+.admin-order-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.admin-order-items,
+.admin-order-payment {
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.admin-order-items h4,
+.admin-order-payment h4 {
+  margin: 0 0 0.75rem;
+}
+
+.admin-order-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-order-item:last-child {
+  border-bottom: 0;
+}
+
+.admin-order-item > div:first-child {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.admin-order-item-prices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
+  text-align: right;
+}
+
+.admin-order-payment {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+}
+
+.admin-order-payment span {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .admin-order-header {
+    flex-direction: column;
+  }
+
+  .admin-order-statuses {
+    justify-content: flex-start;
+  }
+
+  .admin-order-summary {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .admin-order-item {
+    flex-direction: column;
+  }
+
+  .admin-order-item-prices {
+    justify-content: flex-start;
+    text-align: left;
+    gap: 0.35rem;
+  }
+}
