@@ -60,3 +60,44 @@ export const updateSellerProduct = async (
 
   return response.data.data;
 };
+
+export const updateSellerProductVisibility = async (
+  productId,
+  isVisible
+) => {
+  const response = await axios.patch(
+    `${API_BASE_URL}/products/${productId}/visibility`,
+    {
+      isVisible,
+    },
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+
+  return response.data.data;
+};
+
+export const deactivateSellerProduct = async (productId) => {
+  const response = await axios.patch(
+    `${API_BASE_URL}/products/${productId}/deactivate`,
+    {},
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+
+  return response.data.data;
+};
+
+export const activateSellerProduct = async (productId) => {
+  const response = await axios.patch(
+    `${API_BASE_URL}/products/${productId}/activate`,
+    {},
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+
+  return response.data.data;
+};

@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 
 import {
+  activateSellerProduct,
   createSellerProduct,
+  deactivateSellerProduct,
   getSellerProductById,
   getSellerProducts,
   updateSellerProduct,
+  updateSellerProductVisibility,
 } from "../services/sellerProductService";
 
 import "./SellerProductsPage.css";
@@ -14,6 +17,7 @@ export default function SellerProductsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [loadingProduct, setLoadingProduct] = useState(false);
+  const [actionProductId, setActionProductId] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [editingProductId, setEditingProductId] = useState(null);
@@ -161,7 +165,6 @@ export default function SellerProductsPage() {
 
         setSuccess("Product created successfully.");
       }
-      
     } catch (err) {
       console.error("Create product failed:", err);
 
@@ -198,6 +201,76 @@ export default function SellerProductsPage() {
       );
     } finally {
       setLoadingProduct(false);
+    }
+  };
+
+  const handleToggleVisibility = async (product) => {
+    try {
+      setError("");
+      setSuccess("");
+      setActionProductId(product.id);
+
+      const updatedProduct = await updateSellerProductVisibility(
+        product.id,
+        !product.isVisible,
+      );
+
+      setProducts((current) =>
+        current.map((currentProduct) =>
+          currentProduct.id === updatedProduct.id
+            ? updatedProduct
+            : currentProduct,
+        ),
+      );
+
+      setSuccess(
+        updatedProduct.isVisible
+          ? "Product is now visible."
+          : "Product is now hidden.",
+      );
+    } catch (err) {
+      console.error("Update product visibility failed:", err);
+
+      setError(
+        err.response?.data?.message || "Unable to update product visibility.",
+      );
+    } finally {
+      setActionProductId(null);
+    }
+  };
+
+  const handleToggleStatus = async (product) => {
+    try {
+      setError("");
+      setSuccess("");
+      setActionProductId(product.id);
+
+      const updatedProduct =
+        product.status === "ACTIVE"
+          ? await deactivateSellerProduct(product.id)
+          : await activateSellerProduct(product.id);
+
+      setProducts((current) =>
+        current.map((currentProduct) =>
+          currentProduct.id === updatedProduct.id
+            ? updatedProduct
+            : currentProduct,
+        ),
+      );
+
+      setSuccess(
+        updatedProduct.status === "ACTIVE"
+          ? "Product activated successfully."
+          : "Product deactivated successfully.",
+      );
+    } catch (err) {
+      console.error("Update product status failed:", err);
+
+      setError(
+        err.response?.data?.message || "Unable to update product status.",
+      );
+    } finally {
+      setActionProductId(null);
     }
   };
 
@@ -369,11 +442,50 @@ export default function SellerProductsPage() {
                     <span>Category: {product.category.name}</span>
                   )}
 
+                  <div className="seller-product-status">
+                    <span>
+                      Visibility: {product.isVisible ? "Visible" : "Hidden"}
+                    </span>
+
+                    <span>
+                      Status:{" "}
+                      {product.status === "ACTIVE" ? "Active" : "Inactive"}
+                    </span>
+                  </div>
+
+                  <div className="seller-product-actions">
+                    <button
+                      type="button"
+                      className="seller-product-action-button"
+                      onClick={() => handleToggleVisibility(product)}
+                      disabled={actionProductId === product.id}
+                    >
+                      {actionProductId === product.id
+                        ? "Updating..."
+                        : product.isVisible
+                          ? "Hide Product"
+                          : "Show Product"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="seller-product-action-button"
+                      onClick={() => handleToggleStatus(product)}
+                      disabled={actionProductId === product.id}
+                    >
+                      {actionProductId === product.id
+                        ? "Updating..."
+                        : product.status === "ACTIVE"
+                          ? "Deactivate Product"
+                          : "Activate Product"}
+                    </button>
+                  </div>
+
                   <button
                     type="button"
                     className="seller-product-edit-button"
                     onClick={() => handleEdit(product.id)}
-                    disabled={loadingProduct}
+                    disabled={loadingProduct || actionProductId === product.id}
                   >
                     {loadingProduct && editingProductId === product.id
                       ? "Loading..."
