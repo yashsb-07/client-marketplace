@@ -13,6 +13,7 @@ import PaymentPage from "./pages/PaymentPage";
 import SellerDashboardPage from "./pages/SellerDashboardPage";
 import RoleProtectedRoute from "./routes/RoleProtectedRoute";
 import SellerProductsPage from "./pages/SellerProductsPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 function App() {
   return (
@@ -41,6 +42,10 @@ function App() {
             <Route element={<RoleProtectedRoute allowedRole="SELLER" />}>
               <Route path="/seller" element={<SellerDashboardPage />} />
               <Route path="/seller/products" element={<SellerProductsPage />} />
+            </Route>
+
+            <Route element={<RoleProtectedRoute allowedRole="ADMIN" />}>
+              <Route path="/admin" element={<AdminDashboardPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/marketplace" replace />} />
