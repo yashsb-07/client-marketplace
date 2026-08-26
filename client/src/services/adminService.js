@@ -90,3 +90,14 @@ export const getAdminOrders = async () => {
 
   return response.data.data;
 };
+
+export const getAdminPayments = async () => {
+  const response = await axios.get(
+    `${API_BASE_URL}/admin/payments`,
+    {
+      headers: getAuthHeaders(),
+    },
+  );
+
+  return response.data.data;
+};

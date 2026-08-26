@@ -5,6 +5,7 @@ import {
   getAdminBuyers,
   getAdminDashboard,
   getAdminOrders,
+  getAdminPayments,
   getAdminProducts,
   getAdminSellers,
   unblockAdminUser,
@@ -24,6 +25,10 @@ export default function AdminDashboardPage() {
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [orderError, setOrderError] = useState("");
+
+  const [payments, setPayments] = useState([]);
+  const [paymentsLoading, setPaymentsLoading] = useState(true);
+  const [paymentError, setPaymentError] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [usersLoading, setUsersLoading] = useState(true);
@@ -172,6 +177,41 @@ export default function AdminDashboardPage() {
     };
 
     fetchOrders();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchPayments = async () => {
+      try {
+        setPaymentsLoading(true);
+        setPaymentError("");
+
+        const data = await getAdminPayments();
+
+        if (!cancelled) {
+          setPayments(data);
+        }
+      } catch (err) {
+        console.error("Admin payments request failed:", err);
+
+        if (!cancelled) {
+          setPaymentError(
+            err.response?.data?.message || "Unable to load admin payments.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setPaymentsLoading(false);
+        }
+      }
+    };
+
+    fetchPayments();
 
     return () => {
       cancelled = true;
@@ -374,6 +414,43 @@ export default function AdminDashboardPage() {
     );
   };
 
+  const renderPayment = (payment) => {
+    return (
+      <article className="admin-payment-card" key={payment.id}>
+        <div className="admin-payment-header">
+          <div>
+            <h3>Payment #{payment.id}</h3>
+
+            <span>Order #{payment.orderId}</span>
+          </div>
+
+          <span className="admin-payment-status">{payment.status}</span>
+        </div>
+
+        {payment.order?.buyer && (
+          <div className="admin-payment-buyer">
+            <strong>{payment.order.buyer.name}</strong>
+            <span>{payment.order.buyer.email}</span>
+          </div>
+        )}
+
+        <div className="admin-payment-details">
+          <span>Amount: ₹{payment.amount}</span>
+
+          <span>Order Status: {payment.order?.status || "Unavailable"}</span>
+
+          <span>
+            Payment Status: {payment.order?.paymentStatus || "Unavailable"}
+          </span>
+
+          <span>Transaction: {payment.transactionId}</span>
+
+          <span>Date: {new Date(payment.createdAt).toLocaleString()}</span>
+        </div>
+      </article>
+    );
+  };
+
   if (loading) {
     return (
       <main className="admin-dashboard-page">
@@ -522,6 +599,26 @@ export default function AdminDashboardPage() {
             <strong>{dashboard.cancelledPayments}</strong>
           </article>
         </div>
+      </section>
+
+      <section className="admin-dashboard-section">
+        <h2>Payment Management</h2>
+
+        {paymentError && (
+          <div className="admin-user-message error">{paymentError}</div>
+        )}
+
+        {paymentsLoading ? (
+          <p>Loading payments...</p>
+        ) : payments.length === 0 ? (
+          <div className="admin-user-empty">
+            <p>No payments found.</p>
+          </div>
+        ) : (
+          <div className="admin-payments-list">
+            {payments.map(renderPayment)}
+          </div>
+        )}
       </section>
 
       <section className="admin-dashboard-section">
