@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 
 import {
   createSellerProduct,
+  getSellerProductById,
   getSellerProducts,
+  updateSellerProduct,
 } from "../services/sellerProductService";
 
 import "./SellerProductsPage.css";
@@ -11,8 +13,10 @@ export default function SellerProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadingProduct, setLoadingProduct] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [editingProductId, setEditingProductId] = useState(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -117,9 +121,46 @@ export default function SellerProductsPage() {
         productData.imageUrl = form.imageUrl.trim();
       }
 
-      const createdProduct = await createSellerProduct(productData);
+      if (editingProductId) {
+        const updatedProduct = await updateSellerProduct(
+          editingProductId,
+          productData,
+        );
 
-      setProducts((current) => [createdProduct, ...current]);
+        setProducts((current) =>
+          current.map((product) =>
+            product.id === updatedProduct.id ? updatedProduct : product,
+          ),
+        );
+
+        setEditingProductId(null);
+
+        setForm({
+          name: "",
+          description: "",
+          price: "",
+          quantity: "",
+          categoryId: "",
+          imageUrl: "",
+        });
+
+        setSuccess("Product updated successfully.");
+      } else {
+        const createdProduct = await createSellerProduct(productData);
+
+        setProducts((current) => [createdProduct, ...current]);
+
+        setForm({
+          name: "",
+          description: "",
+          price: "",
+          quantity: "",
+          categoryId: "",
+          imageUrl: "",
+        });
+
+        setSuccess("Product created successfully.");
+      }
 
       setForm({
         name: "",
@@ -140,6 +181,52 @@ export default function SellerProductsPage() {
     }
   };
 
+  const handleEdit = async (productId) => {
+    try {
+      setError("");
+      setSuccess("");
+      setLoadingProduct(true);
+
+      const product = await getSellerProductById(productId);
+
+      setEditingProductId(product.id);
+
+      setForm({
+        name: product.name || "",
+        description: product.description || "",
+        price: product.price ?? "",
+        quantity: product.quantity ?? "",
+        categoryId: product.categoryId ?? "",
+        imageUrl: product.imageUrl || "",
+      });
+    } catch (err) {
+      console.error("Load seller product failed:", err);
+
+      setError(
+        err.response?.data?.message ||
+          "Unable to load the product for editing.",
+      );
+    } finally {
+      setLoadingProduct(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingProductId(null);
+
+    setForm({
+      name: "",
+      description: "",
+      price: "",
+      quantity: "",
+      categoryId: "",
+      imageUrl: "",
+    });
+
+    setError("");
+    setSuccess("");
+  };
+
   return (
     <main className="seller-products-page">
       <section className="seller-products-header">
@@ -156,7 +243,7 @@ export default function SellerProductsPage() {
       )}
 
       <section className="seller-product-create-section">
-        <h2>Add Product</h2>
+        <h2>{editingProductId ? "Edit Product" : "Add Product"}</h2>
 
         <form className="seller-product-form" onSubmit={handleSubmit}>
           <label>
@@ -232,8 +319,25 @@ export default function SellerProductsPage() {
           </div>
 
           <button type="submit" disabled={saving}>
-            {saving ? "Creating..." : "Create Product"}
+            {saving
+              ? editingProductId
+                ? "Updating..."
+                : "Creating..."
+              : editingProductId
+                ? "Update Product"
+                : "Create Product"}
           </button>
+
+          {editingProductId && (
+            <button
+              type="button"
+              className="seller-product-cancel-button"
+              onClick={handleCancelEdit}
+              disabled={saving}
+            >
+              Cancel Edit
+            </button>
+          )}
         </form>
       </section>
 
@@ -274,6 +378,17 @@ export default function SellerProductsPage() {
                   {product.category && (
                     <span>Category: {product.category.name}</span>
                   )}
+
+                  <button
+                    type="button"
+                    className="seller-product-edit-button"
+                    onClick={() => handleEdit(product.id)}
+                    disabled={loadingProduct}
+                  >
+                    {loadingProduct && editingProductId === product.id
+                      ? "Loading..."
+                      : "Edit Product"}
+                  </button>
                 </div>
               </article>
             ))}
