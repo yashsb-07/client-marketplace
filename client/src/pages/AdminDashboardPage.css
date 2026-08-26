@@ -120,3 +120,96 @@
     padding: 16px;
   }
 }
+
+.admin-users-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.admin-user-card-info {
+  min-width: 0;
+}
+
+.admin-user-card-info h3 {
+  margin: 0 0 0.35rem;
+}
+
+.admin-user-card-info p {
+  margin: 0 0 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-user-status {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-user-status.active {
+  background: #e8f7ee;
+  color: #176b3a;
+}
+
+.admin-user-status.blocked {
+  background: #fdecec;
+  color: #a52222;
+}
+
+.admin-user-action-button {
+  flex-shrink: 0;
+  padding: 0.65rem 0.9rem;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-user-action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.admin-user-message {
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+}
+
+.admin-user-message.error {
+  background: #fdecec;
+  color: #a52222;
+}
+
+.admin-user-message.success {
+  background: #e8f7ee;
+  color: #176b3a;
+}
+
+.admin-user-empty {
+  padding: 1rem;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+  .admin-user-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-user-action-button {
+    width: 100%;
+  }
+}
