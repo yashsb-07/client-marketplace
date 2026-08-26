@@ -161,17 +161,7 @@ export default function SellerProductsPage() {
 
         setSuccess("Product created successfully.");
       }
-
-      setForm({
-        name: "",
-        description: "",
-        price: "",
-        quantity: "",
-        categoryId: "",
-        imageUrl: "",
-      });
-
-      setSuccess("Product created successfully.");
+      
     } catch (err) {
       console.error("Create product failed:", err);
 
