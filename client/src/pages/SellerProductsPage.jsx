@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
   activateSellerProduct,
@@ -297,6 +298,19 @@ export default function SellerProductsPage() {
           <h1>My Products</h1>
           <p>Manage the products you have created.</p>
         </div>
+
+        <nav
+          className="seller-products-navigation"
+          aria-label="Seller product navigation"
+        >
+          <Link to="/seller" className="seller-products-navigation__link">
+            Seller Dashboard
+          </Link>
+
+          <Link to="/marketplace" className="seller-products-navigation__link">
+            View Marketplace
+          </Link>
+        </nav>
       </section>
 
       {error && <div className="seller-products-message error">{error}</div>}
