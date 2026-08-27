@@ -1,10 +1,12 @@
 import { useState } from "react";
+
 import {
   Link,
   Navigate,
   useLocation,
   useNavigate,
 } from "react-router-dom";
+
 import { useAuth } from "../context/useAuth";
 
 function LoginPage() {
@@ -25,19 +27,16 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  if (isAuthenticated) {
-    if (user.role === "BUYER") {
-      return (
-        <Navigate
-          to="/buyer"
-          replace
-        />
-      );
-    }
+  const destination =
+    location.state?.from ||
+    (user?.role === "BUYER"
+      ? "/buyer"
+      : "/marketplace");
 
+  if (isAuthenticated) {
     return (
       <Navigate
-        to="/marketplace"
+        to={destination}
         replace
       />
     );
@@ -60,9 +59,6 @@ function LoginPage() {
 
     try {
       await login(form);
-
-      const destination =
-        location.state?.from?.pathname || "/buyer";
 
       navigate(destination, {
         replace: true,

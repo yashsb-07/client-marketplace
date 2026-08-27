@@ -1,4 +1,9 @@
-import { Navigate, Outlet } from "react-router-dom";
+import {
+  Navigate,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
+
 import { useAuth } from "../context/useAuth";
 
 function RoleProtectedRoute({ allowedRole }) {
@@ -7,6 +12,8 @@ function RoleProtectedRoute({ allowedRole }) {
     isAuthenticated,
     user,
   } = useAuth();
+
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -17,11 +24,24 @@ function RoleProtectedRoute({ allowedRole }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{
+          from: location,
+        }}
+      />
+    );
   }
 
   if (user?.role !== allowedRole) {
-    return <Navigate to="/marketplace" replace />;
+    return (
+      <Navigate
+        to="/marketplace"
+        replace
+      />
+    );
   }
 
   return <Outlet />;
