@@ -24,16 +24,12 @@ function PaymentPage() {
       setProcessing(true);
       setError("");
 
-      const response = await processPayment(
-        order.id,
-        outcome
-      );
+      const response = await processPayment(order.id, outcome);
 
       setPayment(response.data);
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-          "Unable to process the demo payment."
+        err.response?.data?.message || "Unable to process the demo payment.",
       );
     } finally {
       setProcessing(false);
@@ -46,86 +42,83 @@ function PaymentPage() {
     const isCancelled = payment.status === "CANCELLED";
 
     return (
-        <main className="payment-page">
+      <main className="payment-page">
         <section
-            className={`payment-result ${
-            isSuccess
-                ? "payment-result--success"
-                : "payment-result--failure"
-            }`}
+          className={`payment-result ${
+            isSuccess ? "payment-result--success" : "payment-result--failure"
+          }`}
         >
-            <p className="payment-page__eyebrow">
-            Demo Payment
-            </p>
+          <p className="payment-page__eyebrow">Demo Payment</p>
 
-            <h1>
+          <h1>
             {isSuccess
-                ? "Payment Successful"
-                : isFailed
+              ? "Payment Successful"
+              : isFailed
                 ? "Payment Failed"
                 : isCancelled
-                    ? "Payment Cancelled"
-                    : "Payment Processed"}
-            </h1>
+                  ? "Payment Cancelled"
+                  : "Payment Processed"}
+          </h1>
 
-            <p>
+          <p>
             {isSuccess
-                ? "Your payment was successful and your order has been confirmed."
-                : isFailed
+              ? "Your payment was successful and your order has been confirmed."
+              : isFailed
                 ? "Your payment failed. Your order was not confirmed and inventory was not reduced."
                 : isCancelled
-                    ? "Your payment was cancelled. Your order was not confirmed and inventory was not reduced."
-                    : "Your demo payment has been processed."}
-            </p>
+                  ? "Your payment was cancelled. Your order was not confirmed and inventory was not reduced."
+                  : "Your demo payment has been processed."}
+          </p>
 
-            <div className="payment-result__status">
-            {isSuccess
-                ? "✓ Order Confirmed"
-                : "Inventory Unchanged"}
-            </div>
+          <div className="payment-result__status">
+            {isSuccess ? "✓ Order Confirmed" : "Inventory Unchanged"}
+          </div>
 
-            <div className="payment-result__details">
+          <div className="payment-result__details">
             <div>
-                <span>Order ID</span>
-                <strong>#{order.id}</strong>
+              <span>Order ID</span>
+              <strong>#{order.id}</strong>
             </div>
 
             <div>
-                <span>Payment Status</span>
-                <strong>{payment.status}</strong>
+              <span>Payment Status</span>
+              <strong>{payment.status}</strong>
             </div>
 
             <div>
-                <span>Amount</span>
-                <strong>
-                ₹{Number(payment.amount).toFixed(2)}
-                </strong>
+              <span>Amount</span>
+              <strong>₹{Number(payment.amount).toFixed(2)}</strong>
             </div>
 
             <div>
-                <span>Transaction ID</span>
-                <strong>{payment.transactionId}</strong>
+              <span>Transaction ID</span>
+              <strong>{payment.transactionId}</strong>
             </div>
-            </div>
+          </div>
 
-            <Link
-            to="/marketplace"
-            className="payment-primary-button"
-            >
-            Back to Marketplace
+          {isSuccess ? (
+            <Link to="/marketplace" className="payment-primary-button">
+              Back to Marketplace
             </Link>
+          ) : (
+            <Link
+              to="/checkout"
+              state={{ order }}
+              className="payment-primary-button"
+            >
+              Back to Checkout
+            </Link>
+          )}
         </section>
-        </main>
+      </main>
     );
-    }
+  }
 
   return (
     <main className="payment-page">
       <header className="payment-page__header">
         <div>
-          <p className="payment-page__eyebrow">
-            Demo Payment
-          </p>
+          <p className="payment-page__eyebrow">Demo Payment</p>
 
           <h1>Complete Payment</h1>
         </div>
@@ -139,27 +132,20 @@ function PaymentPage() {
         </Link>
       </header>
 
-      {error && (
-        <div className="payment-alert">
-          {error}
-        </div>
-      )}
+      {error && <div className="payment-alert">{error}</div>}
 
       <section className="payment-layout">
         <div className="payment-card">
           <h2>Order #{order.id}</h2>
 
           <p>
-            This is a simulated payment screen for
-            the client demonstration.
+            This is a simulated payment screen for the client demonstration.
           </p>
 
           <div className="payment-summary">
             <span>Order Total</span>
 
-            <strong>
-              ₹{Number(order.total).toFixed(2)}
-            </strong>
+            <strong>₹{Number(order.total).toFixed(2)}</strong>
           </div>
 
           <div className="payment-options">
@@ -171,11 +157,8 @@ function PaymentPage() {
                 name="paymentOutcome"
                 value="SUCCESS"
                 checked={outcome === "SUCCESS"}
-                onChange={(event) =>
-                  setOutcome(event.target.value)
-                }
+                onChange={(event) => setOutcome(event.target.value)}
               />
-
               Successful Payment
             </label>
 
@@ -185,11 +168,8 @@ function PaymentPage() {
                 name="paymentOutcome"
                 value="FAILED"
                 checked={outcome === "FAILED"}
-                onChange={(event) =>
-                  setOutcome(event.target.value)
-                }
+                onChange={(event) => setOutcome(event.target.value)}
               />
-
               Failed Payment
             </label>
 
@@ -199,11 +179,8 @@ function PaymentPage() {
                 name="paymentOutcome"
                 value="CANCELLED"
                 checked={outcome === "CANCELLED"}
-                onChange={(event) =>
-                  setOutcome(event.target.value)
-                }
+                onChange={(event) => setOutcome(event.target.value)}
               />
-
               Cancelled Payment
             </label>
           </div>
@@ -214,15 +191,12 @@ function PaymentPage() {
             onClick={handlePayment}
             disabled={processing}
           >
-            {processing
-              ? "Processing Payment..."
-              : "Process Demo Payment"}
+            {processing ? "Processing Payment..." : "Process Demo Payment"}
           </button>
 
           <p className="payment-note">
-            This payment is simulated. The backend
-            remains responsible for validating the
-            payment result.
+            This payment is simulated. The backend remains responsible for
+            validating the payment result.
           </p>
         </div>
       </section>

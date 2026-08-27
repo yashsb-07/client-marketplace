@@ -220,6 +220,10 @@
     padding: 24px;
   }
 
+  .payment-result .payment-primary-button {
+    width: 100%;
+  }
+
   .payment-result__details > div {
     align-items: flex-start;
     flex-direction: column;
