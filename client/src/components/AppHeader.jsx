@@ -30,18 +30,16 @@ function AppHeader() {
   return (
     <header className="app-header">
       <div className="app-header__inner">
-        <Link
-          to="/marketplace"
-          className="app-header__brand"
-          onClick={closeMenu}
-        >
+        <Link to="/" className="app-header__brand" onClick={closeMenu}>
           CLIENT MARKETPLACE
         </Link>
 
         <button
           type="button"
           className="app-header__menu-button"
-          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-label={
+            menuOpen ? "Close navigation menu" : "Open navigation menu"
+          }
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((current) => !current)}
         >

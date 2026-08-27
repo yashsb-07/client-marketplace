@@ -1,0 +1,183 @@
+.home-page {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 64px 0 80px;
+}
+
+.home-hero {
+  padding: 72px 0 64px;
+}
+
+.home-hero__eyebrow,
+.home-section-header__eyebrow,
+.home-workflow-card__label {
+  margin: 0 0 12px;
+  color: #666;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.home-hero h1 {
+  max-width: 850px;
+  margin: 0;
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.home-hero__description {
+  max-width: 700px;
+  margin: 24px 0 0;
+  color: #666;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.home-button {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border: 1px solid #d8d8d8;
+  border-radius: 9px;
+  color: #171717;
+  background: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.home-button:hover {
+  background: #f3f3f3;
+}
+
+.home-button--primary {
+  border-color: #171717;
+  color: #fff;
+  background: #171717;
+}
+
+.home-button--primary:hover {
+  background: #333;
+}
+
+.home-workflows {
+  padding-top: 24px;
+}
+
+.home-section-header {
+  margin-bottom: 28px;
+}
+
+.home-section-header h2 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.home-section-header p:last-child {
+  margin: 12px 0 0;
+  color: #666;
+  font-size: 16px;
+}
+
+.home-workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.home-workflow-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 330px;
+  padding: 28px;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.home-workflow-card__label {
+  margin-bottom: 16px;
+}
+
+.home-workflow-card h3 {
+  margin: 0;
+  font-size: 25px;
+  line-height: 1.15;
+}
+
+.home-workflow-card p:not(.home-workflow-card__label) {
+  margin: 16px 0 24px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.home-workflow-card__link {
+  margin-top: auto;
+  color: #5b21b6;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.home-workflow-card__link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .home-page {
+    padding: 48px 0 64px;
+  }
+
+  .home-hero {
+    padding: 48px 0;
+  }
+
+  .home-workflow-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-workflow-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-page {
+    width: min(100% - 28px, 1200px);
+    padding: 32px 0 48px;
+  }
+
+  .home-hero {
+    padding: 32px 0 40px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(38px, 12vw, 54px);
+  }
+
+  .home-hero__description {
+    font-size: 16px;
+  }
+
+  .home-hero__actions {
+    flex-direction: column;
+  }
+
+  .home-button {
+    width: 100%;
+  }
+
+  .home-workflow-card {
+    padding: 22px;
+  }
+}

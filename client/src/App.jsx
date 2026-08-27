@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import BuyerDashboardPage from "./pages/BuyerDashboardPage";
 import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
 import MarketplacePage from "./pages/MarketplacePage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -23,6 +24,7 @@ function App() {
         <AppHeader />
         <CartProvider>
           <Routes>
+            <Route path="/" element={<HomePage />} />
             <Route path="/marketplace" element={<MarketplacePage />} />
 
             <Route
