@@ -9,7 +9,8 @@
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "seed:admin": "node src/config/seedAdmin.js",
-    "seed:categories": "node src/config/seedCategories.js"
+    "seed:categories": "node src/config/seedCategories.js",
+    "seed:seller": "node src/config/seedSeller.js"
   },
   "keywords": [],
   "author": "",
