@@ -55,13 +55,15 @@ function AppHeader() {
             }`}
             aria-label="Main navigation"
           >
-            <NavLink
-              to="/marketplace"
-              className={getNavLinkClass}
-              onClick={closeMenu}
-            >
-              Marketplace
-            </NavLink>
+            {(!isAuthenticated || user?.role !== "SELLER") && (
+              <NavLink
+                to="/marketplace"
+                className={getNavLinkClass}
+                onClick={closeMenu}
+              >
+                Marketplace
+              </NavLink>
+            )}
 
             {!isAuthenticated && (
               <>
@@ -115,6 +117,7 @@ function AppHeader() {
               <>
                 <NavLink
                   to="/seller"
+                  end
                   className={getNavLinkClass}
                   onClick={closeMenu}
                 >
