@@ -58,3 +58,11 @@ export const getMarketplaceProductById = async (productId) => {
 
   return response.data.data;
 };
+
+export const getMarketplaceCategories = async () => {
+  const response = await axios.get(
+    `${API_BASE_URL}/marketplace/categories`
+  );
+
+  return response.data.data;
+};

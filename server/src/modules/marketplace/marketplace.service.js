@@ -179,7 +179,16 @@ const getPublicProductById = async (productId) => {
   return product;
 };
 
+const getPublicCategories = async () => {
+  return prisma.category.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
+};
+
 module.exports = {
   getPublicProducts,
   getPublicProductById,
+  getPublicCategories,
 };

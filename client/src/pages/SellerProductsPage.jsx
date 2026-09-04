@@ -11,10 +11,14 @@ import {
   updateSellerProductVisibility,
 } from "../services/sellerProductService";
 
+import { getMarketplaceCategories } from "../services/marketplaceService";
+
 import "./SellerProductsPage.css";
 
 export default function SellerProductsPage() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [loadingProduct, setLoadingProduct] = useState(false);
@@ -67,6 +71,40 @@ export default function SellerProductsPage() {
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchCategories = async () => {
+      try {
+        setLoadingCategories(true);
+
+        const data = await getMarketplaceCategories();
+
+        if (!cancelled) {
+          setCategories(data);
+        }
+      } catch (err) {
+        console.error("Categories request failed:", err);
+
+        if (!cancelled) {
+          setError(
+            err.response?.data?.message || "Unable to load product categories.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoadingCategories(false);
+        }
+      }
+    };
+
+    fetchCategories();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -107,7 +145,7 @@ export default function SellerProductsPage() {
     }
 
     if (!Number.isInteger(categoryId) || categoryId <= 0) {
-      setError("Please enter a valid category ID.");
+      setError("Please select a category.");
       return;
     }
 
@@ -372,15 +410,25 @@ export default function SellerProductsPage() {
             </label>
 
             <label>
-              Category ID
-              <input
-                type="number"
+              Category
+              <select
                 name="categoryId"
                 value={form.categoryId}
                 onChange={handleChange}
-                min="1"
-                step="1"
-              />
+                disabled={loadingCategories}
+              >
+                <option value="">
+                  {loadingCategories
+                    ? "Loading categories..."
+                    : "Select a category"}
+                </option>
+
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <label>

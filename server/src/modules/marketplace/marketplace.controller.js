@@ -1,6 +1,7 @@
 const {
   getPublicProducts,
   getPublicProductById,
+  getPublicCategories,
 } = require("./marketplace.service");
 
 const getProducts = async (req, res, next) => {
@@ -25,6 +26,19 @@ const getProducts = async (req, res, next) => {
   }
 };
 
+const getCategories = async (req, res, next) => {
+  try {
+    const categories = await getPublicCategories();
+
+    return res.status(200).json({
+      success: true,
+      data: categories,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getProductById = async (req, res, next) => {
   try {
     const product = await getPublicProductById(
@@ -43,4 +57,5 @@ const getProductById = async (req, res, next) => {
 module.exports = {
   getProducts,
   getProductById,
+  getCategories,
 };
